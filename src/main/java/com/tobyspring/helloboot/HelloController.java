@@ -1,5 +1,6 @@
 package com.tobyspring.helloboot;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,17 +9,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
-// @RestController : dispatcherServlet 하고 직접적인 관련은 없음
-// @RestController 이 애노테이션을 붙이면, 명시적으로 @ResponseBody 를 붙이지 않아도 됨
-// 클래스 레벨에 걸어주면, dispatcherServlet 이 찾을 수 있음
-// @RequestMapping("/hello")
-// @MyComponent 직접 정의한 애노테이션 ( 애노테이션 위에 컴포넌트 애노테이션을 등록해도 잘 동작함 )
+
 @RestController
 public class HelloController {
     private final HelloService helloService;
+    private final ApplicationContext applicationContext;
 
-    public HelloController(HelloService helloService) {
+    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
         this.helloService = helloService;
+        this.applicationContext = applicationContext;
+
+        System.out.println("applicationContext = " + applicationContext);
     }
 
     // dispatcherServlet 이 받을 수 있게끔 어노테이션을 걸어줌

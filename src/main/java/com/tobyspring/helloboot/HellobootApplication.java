@@ -29,6 +29,16 @@ import java.io.IOException;
 @Configuration
 @ComponentScan // 이 패키지를 기준으로 하위 패키지를 모두 뒤져서 @Component 가 붙은 클래스를 찾아서 bean object 로 등록
 public class HellobootApplication {
+
+	@Bean
+	public ServletWebServerFactory servletWebServerFactory() {
+		return new TomcatServletWebServerFactory();
+	}
+	
+	@Bean
+	public DispatcherServlet dispatcherServlet() {
+		return new DispatcherServlet();
+	}
 	
 	public static void main(String[] args) {
 		// 스프링 컨테이너 + 서블릿 컨테이너 통합
@@ -37,13 +47,14 @@ public class HellobootApplication {
 			protected void onRefresh() {
 				super.onRefresh();
 
-				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-
+				ServletWebServerFactory serverFactory = this.getBean(ServletWebServerFactory.class);
+				DispatcherServlet dispatcherServlet = this.getBean(DispatcherServlet.class);
+				
 				WebServer webServer = serverFactory.getWebServer(
 						servletContext -> {
 							servletContext
-									.addServlet("dispatcherServlet", new DispatcherServlet(this))
-									.addMapping("/*"); // frontcontroller 서블릿을 모든 요청에 매핑
+									.addServlet("dispatcherServlet", dispatcherServlet)
+									.addMapping("/*");
 						}
 				);
 				webServer.start();
