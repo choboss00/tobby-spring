@@ -24,19 +24,23 @@ public class HellobootApplication {
 		// getWebServer 는 TomcatWebServer 객체를 반환하는데, 이 객체는 WebServer 인터페이스를 상속받았기 때문에 추상화로 인해 받을 수 있음
 		WebServer webServer = serverFactory.getWebServer(
 				servletContext -> {
+					HelloController helloController = new HelloController();
+
 					// 서블릿 컨텍스트 초기화
 					servletContext.addServlet("frontcontroller", new HttpServlet() {
 								@Override
 								protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 									// 인증, 보안, 다국어 처리, 공통 기능 등등 처리를 앞에서 진행
-									// frontcontroller 가 매핑 기능을 담당해야 함
+									// frontcontroller 가 매핑 기능을 담당해야 함 ( mapping )
 									if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
 										String name = req.getParameter("name");
+										// binding : data 를 집어넣어서 처리하는 것
+										String ret = helloController.hello(name);
 
 										// 상태 코드, 헤더 ( 컨텐츠 타입 헤더 ), 바디
 										resp.setStatus(HttpStatus.OK.value());
 										resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-										resp.getWriter().println("hello " + name);
+										resp.getWriter().println(ret);
 									}
 									else if (req.getRequestURI().equals("/user")) {
 										// ...
