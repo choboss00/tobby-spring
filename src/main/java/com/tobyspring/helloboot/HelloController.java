@@ -4,10 +4,14 @@ import java.util.Objects;
 
 public class HelloController {
 
-    public String hello(String name) {
+    private final HelloService helloService;
 
-        SimpleHelloService simpleHelloService = new SimpleHelloService();
+    public HelloController(HelloService helloService) {
+        this.helloService = helloService;
+    }
+
+    public String hello(String name) {
         // null 이 아닌 경우 그대로 리턴, null 인 경우 예외처리
-        return simpleHelloService.sayHello(Objects.requireNonNull(name));
+        return helloService.sayHello(Objects.requireNonNull(name));
     }
 }
