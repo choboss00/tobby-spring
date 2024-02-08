@@ -1,62 +1,33 @@
 package com.tobyspring.helloboot;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
+// config 정보, 구성 정보를 가지고 있는 클래스라고 명시 ( spring container 가 이를 보고 bean object 를 만들면 되겠다고 인식함 )
+// configuration 이 붙은 클래스는 중요한 정보들을 많이 담고있다고 인식
+@Configuration
+@ComponentScan // 이 패키지를 기준으로 하위 패키지를 모두 뒤져서 @Component 가 붙은 클래스를 찾아서 bean object 로 등록
 public class HellobootApplication {
 
+	@Bean
+	public ServletWebServerFactory servletWebServerFactory() {
+		return new TomcatServletWebServerFactory();
+	}
+	
+	@Bean
+	public DispatcherServlet dispatcherServlet() {
+		return new DispatcherServlet();
+	}
+	
 	public static void main(String[] args) {
-		// 추상화했기 때문에, 톰캣이 아닌 다른 WebServer 구현체로 변경할 수 있음
-		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-		// getWebServer 는 TomcatWebServer 객체를 반환하는데, 이 객체는 WebServer 인터페이스를 상속받았기 때문에 추상화로 인해 받을 수 있음
-		WebServer webServer = serverFactory.getWebServer(
-				servletContext -> {
-					HelloController helloController = new HelloController();
-
-					// 서블릿 컨텍스트 초기화
-					servletContext.addServlet("frontcontroller", new HttpServlet() {
-								@Override
-								protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-									// 인증, 보안, 다국어 처리, 공통 기능 등등 처리를 앞에서 진행
-									// frontcontroller 가 매핑 기능을 담당해야 함 ( mapping )
-									if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
-										String name = req.getParameter("name");
-										// binding : data 를 집어넣어서 처리하는 것
-										String ret = helloController.hello(name);
-
-										// 상태 코드, 헤더 ( 컨텐츠 타입 헤더 ), 바디
-										resp.setStatus(HttpStatus.OK.value());
-										resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-										resp.getWriter().println(ret);
-									}
-									else if (req.getRequestURI().equals("/user")) {
-										// ...
-									}
-									else {
-										resp.setStatus(HttpStatus.NOT_FOUND.value());
-									}
-
-
-								}
-							}
-					).addMapping("/*"); // frontcontroller 서블릿을 모든 요청에 매핑
-				}
-		);
-		webServer.start();
-
+		SpringApplication.run(HellobootApplication.class, args);
 	}
 
 }
