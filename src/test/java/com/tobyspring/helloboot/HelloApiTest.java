@@ -20,7 +20,7 @@ public class HelloApiTest {
         TestRestTemplate rest = new TestRestTemplate();
         
         // 웹응답의 모든 요소를 가지고있는 타입
-        ResponseEntity<String> resp = rest.getForEntity("http://localhost:8080/hello?name={name}", String.class, "Spring");
+        ResponseEntity<String> resp = rest.getForEntity("http://localhost:8080/app/hello?name={name}", String.class, "Spring");
         
         // status code 200, header(content-type), body(Hello Spring) 가 출력됨
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -36,7 +36,7 @@ public class HelloApiTest {
         TestRestTemplate rest = new TestRestTemplate();
 
         // 웹응답의 모든 요소를 가지고있는 타입
-        ResponseEntity<String> resp = rest.getForEntity("http://localhost:8080/hello?name=", String.class);
+        ResponseEntity<String> resp = rest.getForEntity("http://localhost:8080/app/hello?name=", String.class);
 
         // status code 500
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
