@@ -13,13 +13,9 @@ import java.util.Objects;
 @RestController
 public class HelloController {
     private final HelloService helloService;
-    private final ApplicationContext applicationContext;
 
-    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
+    public HelloController(HelloService helloService) {
         this.helloService = helloService;
-        this.applicationContext = applicationContext;
-
-        System.out.println("applicationContext = " + applicationContext);
     }
 
     // dispatcherServlet 이 받을 수 있게끔 어노테이션을 걸어줌
@@ -27,7 +23,11 @@ public class HelloController {
     // dispatcherServlet 은 view 를 찾는데, 없으니 404 에러를 뱉음. 그래서 애노테이션을 하나더 추가해줌
     @GetMapping("/hello")
     public String hello(String name) {
-        // null 이 아닌 경우 그대로 리턴, null 인 경우 예외처리
-        return helloService.sayHello(Objects.requireNonNull(name));
+
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException();
+        }
+
+        return helloService.sayHello(name);
     }
 }
