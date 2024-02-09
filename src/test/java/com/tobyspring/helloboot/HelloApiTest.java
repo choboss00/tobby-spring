@@ -28,4 +28,18 @@ public class HelloApiTest {
         assertThat(resp.getBody()).isEqualTo("Hello Spring");
         
     }
+
+    @Test
+    void failsHelloApi() {
+        // http localhost:8080/hello name=Spring
+        // API 응답을 호출해서 가져올 수 있음
+        TestRestTemplate rest = new TestRestTemplate();
+
+        // 웹응답의 모든 요소를 가지고있는 타입
+        ResponseEntity<String> resp = rest.getForEntity("http://localhost:8080/hello?name=", String.class);
+
+        // status code 500
+        assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
 }
