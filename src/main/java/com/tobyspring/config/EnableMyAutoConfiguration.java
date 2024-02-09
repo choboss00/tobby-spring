@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import({DispatcherServletConfig.class, TomcatWebServerConfig.class})
+@Import(MyAutoConfigImportSelector.class) // 이 Selector 는 특별하게 메소드의 리턴값을 가져옴
 public @interface EnableMyAutoConfiguration {
 }
