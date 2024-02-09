@@ -25,7 +25,7 @@ public class HelloApiTest {
         // status code 200, header(content-type), body(Hello Spring) 가 출력됨
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(resp.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)).startsWith(MediaType.TEXT_PLAIN_VALUE);
-        assertThat(resp.getBody()).isEqualTo("Hello Spring");
+        assertThat(resp.getBody()).isEqualTo("*Hello Spring*");
         
     }
 
