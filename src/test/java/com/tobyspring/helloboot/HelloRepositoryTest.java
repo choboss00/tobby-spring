@@ -15,12 +15,6 @@ public class HelloRepositoryTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void init() {
-        // table 이 비어있는 상태로 시작하기 때문에 DB 테이블을 만들고 초기화하는 작업이 필요함
-        jdbcTemplate.execute("create table if not exists hello(name varchar(50) primary key, count int)");
-    }
-
     @Test
     void findHelloFailed() {
         Assertions.assertThat(helloRepository.findHello("Toby")).isNull();

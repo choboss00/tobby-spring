@@ -21,19 +21,6 @@ import java.sql.Driver;
 @EnableTransactionManagement
 public class DataSourceConfig {
 
-    @Bean
-    @ConditionalMyOnClass("com.zaxxer.hikari.HikariDataSource")
-    @ConditionalOnMissingBean
-    DataSource dataSource(MyDataSourceProperties properties) throws ClassNotFoundException {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-
-        dataSource.setDriverClass((Class<? extends Driver>) Class.forName(properties.getDriverClassName()));
-        dataSource.setUrl(properties.getUrl());
-        dataSource.setUsername(properties.getUsername());
-        dataSource.setPassword(properties.getPassword());
-
-        return dataSource;
-    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -42,6 +29,20 @@ public class DataSourceConfig {
 
         dataSource.setDriverClassName(properties.getDriverClassName());
         dataSource.setJdbcUrl(properties.getUrl());
+        dataSource.setUsername(properties.getUsername());
+        dataSource.setPassword(properties.getPassword());
+
+        return dataSource;
+    }
+
+    @Bean
+    @ConditionalMyOnClass("com.zaxxer.hikari.HikariDataSource")
+    @ConditionalOnMissingBean
+    DataSource dataSource(MyDataSourceProperties properties) throws ClassNotFoundException {
+        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+
+        dataSource.setDriverClass((Class<? extends Driver>) Class.forName(properties.getDriverClassName()));
+        dataSource.setUrl(properties.getUrl());
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
 
