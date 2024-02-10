@@ -7,14 +7,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = HellobootApplication.class) // bean 정보들을 다 불러옴
-@TestPropertySource("classpath:/application.properties")
+@HellobootTest
 public class DataSourceTest {
 
     @Autowired
